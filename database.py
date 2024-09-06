@@ -1,19 +1,17 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
-# Use the DATABASE_URL from environment variables
-database_url = os.environ.get('DATABASE_URL')
+db = SQLAlchemy()
+migrate = Migrate()
 
-engine = create_engine(database_url)
-db_session = scoped_session(sessionmaker(autocommit=False,
-                                         autoflush=False,
-                                         bind=engine))
+def init_db(app):
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+    if app.config['SQLALCHEMY_DATABASE_URI'].startswith("postgres://"):
+        app.config['SQLALCHEMY_DATABASE_URI'] = app.config['SQLALCHEMY_DATABASE_URI'].replace("postgres://", "postgresql://", 1)
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    db.init_app(app)
+    migrate.init_app(app, db)
 
-Base = declarative_base()
-Base.query = db_session.query_property()
-
-def init_db():
-    import models
-    Base.metadata.create_all(bind=engine)
+    with app.app_context():
+        db.create_all()

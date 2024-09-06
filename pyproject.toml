@@ -10,6 +10,10 @@ python = "^3.11"
 flask = "^3.0.3"
 sqlalchemy = "^2.0.34"
 psycopg2-binary = "^2.9.9"
+flask-login = "^0.6.3"
+werkzeug = "^3.0.4"
+flask-migrate = "^4.0.7"
+flask-sqlalchemy = "^3.1.1"
 
 
 [build-system]

@@ -16,6 +16,13 @@
                     <li><a href="/" class="hover:underline">Home</a></li>
                     <li><a href="/about" class="hover:underline">About</a></li>
                     <li><a href="/leaders" class="hover:underline">All Leaders</a></li>
+                    {% if current_user.is_authenticated %}
+                        <li><a href="{{ url_for('dashboard') }}" class="hover:underline">My Profile</a></li>
+                        <li><a href="{{ url_for('logout') }}" class="hover:underline">Logout</a></li>
+                    {% else %}
+                        <li><a href="{{ url_for('login') }}" class="hover:underline">Login</a></li>
+                        <li><a href="{{ url_for('register') }}" class="hover:underline">Register</a></li>
+                    {% endif %}
                 </ul>
             </nav>
             <div class="relative">
@@ -26,6 +33,17 @@
     </header>
 
     <main class="container mx-auto mt-8 px-4">
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-4" role="alert">
+                    <ul>
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </main>
 

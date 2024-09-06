@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile - Bangalore Product Leaders{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-lg shadow-md p-8">
+    <h2 class="text-3xl font-bold mb-6">My Profile</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <h3 class="text-2xl font-semibold mb-4">Personal Information</h3>
+            <p><strong>Name:</strong> {{ current_user.name }}</p>
+            <p><strong>Company:</strong> {{ current_user.company }}</p>
+            <p><strong>Email:</strong> {{ current_user.email }}</p>
+            <p><strong>Bio:</strong> {{ current_user.bio or 'No bio added yet' }}</p>
+            <a href="{{ url_for('edit_profile') }}" class="mt-4 inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600">
+                Edit Profile
+            </a>
+        </div>
+        <div>
+            <h3 class="text-2xl font-semibold mb-4">My Collaborators</h3>
+            {% if current_user.collaborators.all() %}
+                <ul class="list-disc list-inside">
+                    {% for collaborator in current_user.collaborators %}
+                    <li class="mb-2">
+                        <span class="font-medium">{{ collaborator.name }}</span>
+                        {% if collaborator.role %} - {{ collaborator.role }}{% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No collaborators added yet</p>
+            {% endif %}
+
+            <h3 class="text-2xl font-semibold mt-6 mb-4">My Content</h3>
+            <ul>
+                {% for content in current_user.contents %}
+                <li class="mb-2">
+                    <span class="font-medium">{{ content.title }}</span> ({{ content.type }})
+                </li>
+                {% else %}
+                <li>No content added yet</li>
+                {% endfor %}
+            </ul>
+            <h3 class="text-2xl font-semibold mt-6 mb-4">My Projects</h3>
+            <ul>
+                {% for project in current_user.projects %}
+                <li class="mb-2">
+                    <span class="font-medium">{{ project.name }}</span>
+                </li>
+                {% else %}
+                <li>No projects added yet</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
